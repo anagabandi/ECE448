@@ -1,9 +1,20 @@
 package mp1;
 
-import java.util.Stack;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
-public class DepthFirstSearch extends Search {
-	private int startX, startY, goalX, goalY;
+public class UniformCostSearch extends Search {
+private int startX, startY, goalX, goalY;
+	
+	private double cost1(int x, int y, double currentCost) {
+		return Math.pow(1/2, y);
+		//return Math.pow(2, y);
+
+	}
+	
+	private double cost2(int x, int y, double currentCost) {
+		return Math.pow(2, x) + currentCost;
+	}
 	
 	private void setInititalStates() {
 		for(int i = 0; i < rows; i++) {
@@ -21,25 +32,40 @@ public class DepthFirstSearch extends Search {
 	
 	@Override
 	public void findPath() {
-		System.out.println("Solving DFS");
+		PriorityQueue<Cell> pq = new PriorityQueue<Cell>(10, new Comparator<Cell>() {
+			@Override
+			public int compare(Cell n1, Cell n2) {
+				if(n1.getCost() > n2.getCost()) {
+					return +1;
+				}
+				else if (n1.getCost() < n2.getCost()) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}
+		});
+		
+		System.out.println("Solving UCS");
 		setInititalStates();
-
-		Stack<Cell> st = new Stack<Cell>();
 		boolean foundSolution = false;
 		
 		int x = startX;
 		int y = startY;
 		
-		st.add(cells[x][y]);
+		cells[x][y].setCost(0);
+		pq.add(cells[x][y]);
 		
-		while(!st.isEmpty() && !foundSolution) {
-			if(maxFrontierSize < st.size()) maxFrontierSize = st.size();
+		while(!pq.isEmpty() && !foundSolution) {
+			if(maxFrontierSize < pq.size()) maxFrontierSize = pq.size();
 			
-			Cell c = st.pop();
+			Cell c = pq.remove();
 			
 			if(!c.isHasVisited()) {
 				x = c.getX();
 				y = c.getY();
+				
 				cells[x][y].markAsVisited();
 				numberOfNodesExpanded++;
 								
@@ -58,7 +84,8 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					tmp.setCost(cost1(x-1, y, tmp.getCost()));
+					pq.add(tmp);
 				}
 				
 				if(canTravel(x, y - 1)) { // left
@@ -68,7 +95,8 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					tmp.setCost(cost1(x, y-1, tmp.getCost()));
+					pq.add(tmp);
 	
 				}
 				
@@ -80,7 +108,8 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					tmp.setCost(cost1(x+1, y, tmp.getCost()));
+					pq.add(tmp);
 				}
 				
 				if(canTravel(x, y + 1)) { // right
@@ -91,27 +120,26 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					
+					tmp.setCost(cost1(x, y+1, tmp.getCost()));
+					pq.add(tmp);
 				}
-				
-				
-				
-			}
-			
-			
-		}
-		
-		// Print solution
-		x = goalX;
-		y = goalY;
 
-		while(x != startX || y != startY) {
-			pathLength++;
-			Cell tmp = cells[x][y];
-			tmp.markAsPath();
-			x = tmp.parentX;
-			y = tmp.parentY;
-			
+			}
+						
 		}
+		// Print solution
+					x = goalX;
+					y = goalY;
+
+					while(x != startX || y != startY) {
+						pathLength++;
+						Cell tmp = cells[x][y];
+						tmp.markAsPath();
+						x = tmp.parentX;
+						y = tmp.parentY;
+						
+					}
+
 	}
 }

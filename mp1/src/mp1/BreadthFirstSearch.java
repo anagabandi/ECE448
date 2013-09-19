@@ -42,9 +42,10 @@ public class BreadthFirstSearch extends Search {
 				x = c.getX();
 				y = c.getY();
 				cells[x][y].markAsVisited();
+				numberOfNodesExpanded++;
 								
 				
-				if(c.isGoal()) {
+				if(x == goalX && y == goalY) {
 					foundSolution = true;
 				}
 				
@@ -105,6 +106,7 @@ public class BreadthFirstSearch extends Search {
 		y = goalY;
 
 		while(x != startX || y != startY) {
+			pathLength++;
 			Cell tmp = cells[x][y];
 			tmp.markAsPath();
 			x = tmp.parentX;

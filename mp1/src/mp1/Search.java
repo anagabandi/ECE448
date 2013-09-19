@@ -9,7 +9,7 @@ public class Search implements Searcher {
 	Cell [][] cells;
 	int rows, columns;
 	int startX, startY;
-	protected int maxHeight = 0, maxFrontierSize = 0, numberOfNodesExpanded=0;
+	protected int maxHeight = 0, maxFrontierSize = 0, numberOfNodesExpanded=0, pathLength = 0;
 	
 	@Override
 	public void loadMap(String fileName) throws Exception {
@@ -25,9 +25,6 @@ public class Search implements Searcher {
 				this.columns = line.length();
 			}	
 		}
-		
-		System.out.println("Rows: " + rows);
-		System.out.println("Columns: " + columns);
 
 		cells = new Cell[rows][columns];
 		
@@ -65,6 +62,11 @@ public class Search implements Searcher {
 		System.out.println();
 		System.out.println("Max Height: " + maxHeight);
 		System.out.println("Max Frontier Size: " + maxFrontierSize);
+		System.out.println("Number of Nodes Expanded: " + numberOfNodesExpanded);
+		System.out.println("Path Length: " + pathLength);
+		System.out.println();
+
+
 	}
 
 	@Override

@@ -1,9 +1,14 @@
 package mp1;
 
-import java.util.Stack;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
-public class DepthFirstSearch extends Search {
+public class GreedyBestFirstSearch extends Search {
 	private int startX, startY, goalX, goalY;
+	
+	private int heuristic(int x, int y) {
+		return (goalX - x)*(goalX - x) + (goalY - y)*(goalY - y);
+	}
 	
 	private void setInititalStates() {
 		for(int i = 0; i < rows; i++) {
@@ -21,25 +26,40 @@ public class DepthFirstSearch extends Search {
 	
 	@Override
 	public void findPath() {
-		System.out.println("Solving DFS");
+		PriorityQueue<Cell> pq = new PriorityQueue<Cell>(10, new Comparator<Cell>() {
+			@Override
+			public int compare(Cell n1, Cell n2) {
+				if(n1.getDistance() > n2.getDistance()) {
+					return +1;
+				}
+				else if (n1.getDistance() < n2.getDistance()) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}
+		});
+		
+		System.out.println("Solving GBFS");
 		setInititalStates();
-
-		Stack<Cell> st = new Stack<Cell>();
 		boolean foundSolution = false;
 		
 		int x = startX;
 		int y = startY;
 		
-		st.add(cells[x][y]);
+		cells[x][y].setDistance(heuristic(x, y));
+		pq.add(cells[x][y]);
 		
-		while(!st.isEmpty() && !foundSolution) {
-			if(maxFrontierSize < st.size()) maxFrontierSize = st.size();
+		while(!pq.isEmpty() && !foundSolution) {
+			if(maxFrontierSize < pq.size()) maxFrontierSize = pq.size();
 			
-			Cell c = st.pop();
+			Cell c = pq.remove();
 			
 			if(!c.isHasVisited()) {
 				x = c.getX();
 				y = c.getY();
+				
 				cells[x][y].markAsVisited();
 				numberOfNodesExpanded++;
 								
@@ -58,7 +78,8 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					tmp.setDistance(heuristic(x-1, y));
+					pq.add(tmp);
 				}
 				
 				if(canTravel(x, y - 1)) { // left
@@ -68,7 +89,8 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					tmp.setDistance(heuristic(x, y-1));
+					pq.add(tmp);
 	
 				}
 				
@@ -80,7 +102,8 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					tmp.setDistance(heuristic(x+1, y));
+					pq.add(tmp);
 				}
 				
 				if(canTravel(x, y + 1)) { // right
@@ -91,27 +114,32 @@ public class DepthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					st.push(tmp);
+					
+					tmp.setDistance(heuristic(x, y+1));
+					pq.add(tmp);
 				}
-				
-				
-				
-			}
-			
-			
-		}
-		
-		// Print solution
-		x = goalX;
-		y = goalY;
 
-		while(x != startX || y != startY) {
-			pathLength++;
-			Cell tmp = cells[x][y];
-			tmp.markAsPath();
-			x = tmp.parentX;
-			y = tmp.parentY;
-			
+			}
+						
 		}
+		// Print solution
+					x = goalX;
+					y = goalY;
+
+					while(x != startX || y != startY) {
+						pathLength++;
+						Cell tmp = cells[x][y];
+						tmp.markAsPath();
+						x = tmp.parentX;
+						y = tmp.parentY;
+						
+					}
+		
+		
+		
+		
+		
 	}
+	
+	
 }

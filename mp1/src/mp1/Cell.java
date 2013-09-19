@@ -4,9 +4,11 @@ public class Cell {
 	private boolean hasVisited;
 	public CellType cellType;
 	private int x, y;
-	
+	private double distance;
+
 	public int parentX, parentY;
 	public int height;
+	private double cost;
 	
 	public int getX() {
 		return x;
@@ -27,8 +29,23 @@ public class Cell {
 	public boolean isHasVisited() {
 		return hasVisited;
 	}
-
 	
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	public double getCost() {
+		return cost;
+	}
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
 	public Cell(int x, int y, Character c) {
 		if(c.equals('%')) this.cellType = CellType.WALL;
 		if(c.equals(' ')) this.cellType = CellType.OPEN;
@@ -68,12 +85,6 @@ public class Cell {
 		this.cellType = CellType.GOAL;
 	}
 	
-	public boolean isGoal() {
-		if(this.cellType.equals(CellType.GOAL)) {
-			return true;	
-		}
-		return false;
-	}
 	
 	public boolean isWall() {
 		if(this.cellType.equals(CellType.WALL)) {
