@@ -1,9 +1,8 @@
 package mp1;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
-public class BreadthFirstSearch extends Search {
+public class DepthFirstSearch extends Search {
 	private int startX, startY, goalX, goalY;
 	
 	private void setInititalStates() {
@@ -22,21 +21,21 @@ public class BreadthFirstSearch extends Search {
 	
 	@Override
 	public void findPath() {
-		System.out.println("Solving BFS");
+		System.out.println("Solving DFS");
 		setInititalStates();
 
-		Queue<Cell> qu = new LinkedList<Cell>();
+		Stack<Cell> st = new Stack<Cell>();
 		boolean foundSolution = false;
 		
 		int x = startX;
 		int y = startY;
 		
-		qu.add(cells[x][y]);
+		st.add(cells[x][y]);
 		
-		while(!qu.isEmpty() && !foundSolution) {
-			if(maxFrontierSize < qu.size()) maxFrontierSize = qu.size();
+		while(!st.isEmpty() && !foundSolution) {
+			if(maxFrontierSize < st.size()) maxFrontierSize = st.size();
 			
-			Cell c = qu.remove();
+			Cell c = st.pop();
 			
 			if(!c.isHasVisited()) {
 				x = c.getX();
@@ -50,40 +49,7 @@ public class BreadthFirstSearch extends Search {
 				
 				// Add nearby to frontier
 				
-				if(canTravel(x, y - 1)) {
-					Cell tmp = cells[x][y-1];
-					tmp.height = c.height + 1;
-					if(maxHeight < tmp.height) maxHeight = tmp.height;
-					tmp.parentX = c.getX();
-					tmp.parentY = c.getY();
-					
-					qu.add(tmp);
-	
-				}
-				
-				if(canTravel(x + 1, y)) {
-					
-					Cell tmp = cells[x+1][y];
-					tmp.height = c.height + 1;
-					if(maxHeight < tmp.height) maxHeight = tmp.height;
-					tmp.parentX = c.getX();
-					tmp.parentY = c.getY();
-					
-					qu.add(tmp);
-				}
-				
-				if(canTravel(x, y + 1)) {
-					
-					Cell tmp = cells[x][y+1];
-					tmp.height = c.height + 1;
-					if(maxHeight < tmp.height) maxHeight = tmp.height;
-					tmp.parentX = c.getX();
-					tmp.parentY = c.getY();
-					
-					qu.add(tmp);
-				}
-				
-				if(canTravel(x - 1, y)) {
+				if(canTravel(x - 1, y)) { //up
 					
 					Cell tmp = cells[x-1][y];
 					tmp.height = c.height + 1;
@@ -91,9 +57,43 @@ public class BreadthFirstSearch extends Search {
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					qu.add(tmp);
+					st.push(tmp);
 				}
-				//printMap();
+				
+				if(canTravel(x, y - 1)) { // left
+					Cell tmp = cells[x][y-1];
+					tmp.height = c.height + 1;
+					if(maxHeight < tmp.height) maxHeight = tmp.height;
+					tmp.parentX = c.getX();
+					tmp.parentY = c.getY();
+					
+					st.push(tmp);
+	
+				}
+				
+				if(canTravel(x + 1, y)) { // down
+					
+					Cell tmp = cells[x+1][y];
+					tmp.height = c.height + 1;
+					if(maxHeight < tmp.height) maxHeight = tmp.height;
+					tmp.parentX = c.getX();
+					tmp.parentY = c.getY();
+					
+					st.push(tmp);
+				}
+				
+				if(canTravel(x, y + 1)) { // right
+					
+					Cell tmp = cells[x][y+1];
+					tmp.height = c.height + 1;
+					if(maxHeight < tmp.height) maxHeight = tmp.height;
+					tmp.parentX = c.getX();
+					tmp.parentY = c.getY();
+					
+					st.push(tmp);
+				}
+				
+				
 				
 			}
 			
@@ -112,5 +112,4 @@ public class BreadthFirstSearch extends Search {
 			
 		}
 	}
-	
 }

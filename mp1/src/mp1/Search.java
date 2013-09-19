@@ -9,7 +9,7 @@ public class Search implements Searcher {
 	Cell [][] cells;
 	int rows, columns;
 	int startX, startY;
-	protected int maxHeight = 0, maxFrontierSize = 0;
+	protected int maxHeight = 0, maxFrontierSize = 0, numberOfNodesExpanded=0;
 	
 	@Override
 	public void loadMap(String fileName) throws Exception {
@@ -71,6 +71,14 @@ public class Search implements Searcher {
 	public void findPath() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	protected boolean canTravel(int x, int y) {
+		if(x < 0 || x > (rows - 1)) return false;
+		if(y < 0 || y > (columns - 1)) return false;
+		if(cells[x][y].isWall()) return false;
+		if(cells[x][y].isHasVisited()) return false;
+		return true;
 	}
 	
 	
