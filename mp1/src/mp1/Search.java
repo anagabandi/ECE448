@@ -53,12 +53,15 @@ public class Search implements Searcher {
 	@Override
 	public void printMap() {
 		// TODO Auto-generated method stub
+		// Prints out the map matrix to System.out
 		for(int i = 0; i < this.rows; i++) {
 			System.out.println();
 			for(int j = 0; j < this.columns; j++) {
 				System.out.print(cells[i][j].toChar());
 			}
 		}
+		
+		// Prints out relevant stats on the search
 		System.out.println();
 		System.out.println("Max Height: " + maxHeight);
 		System.out.println("Max Frontier Size: " + maxFrontierSize);
@@ -75,6 +78,7 @@ public class Search implements Searcher {
 		
 	}
 	
+	// Figures out if the path can be traveled or not.
 	protected boolean canTravel(int x, int y) {
 		if(x < 0 || x > (rows - 1)) return false;
 		if(y < 0 || y > (columns - 1)) return false;

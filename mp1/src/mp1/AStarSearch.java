@@ -3,11 +3,11 @@ package mp1;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class GreedyBestFirstSearch extends Search {
-	private int startX, startY, goalX, goalY;
+public class AStarSearch extends Search {
+private int startX, startY, goalX, goalY;
 	
-	private int heuristic(int x, int y) {
-		return Math.abs(goalX - x) + Math.abs(goalY - y);
+	private double heuristic(int x, int y) {
+		return Math.pow(Math.abs(goalX - x) + Math.abs(goalY - y), 1) + cells[x][y].height;
 	}
 	
 	private void setInititalStates() {
@@ -41,7 +41,7 @@ public class GreedyBestFirstSearch extends Search {
 			}
 		});
 		
-		System.out.println("Solving GBFS");
+		System.out.println("Solving A* Search");
 		setInititalStates();
 		boolean foundSolution = false;
 		
@@ -118,7 +118,9 @@ public class GreedyBestFirstSearch extends Search {
 					tmp.setDistance(heuristic(x, y+1));
 					pq.add(tmp);
 				}
-
+				
+				
+				
 			}
 						
 		}
@@ -135,11 +137,5 @@ public class GreedyBestFirstSearch extends Search {
 						
 					}
 		
-		
-		
-		
-		
 	}
-	
-	
 }

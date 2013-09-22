@@ -37,7 +37,7 @@ public class DepthFirstSearch extends Search {
 			
 			Cell c = st.pop();
 			
-			if(!c.isHasVisited()) {
+			if(!c.isHasVisited()) { // Only "expands" the node if we haven't been there already
 				x = c.getX();
 				y = c.getY();
 				cells[x][y].markAsVisited();
