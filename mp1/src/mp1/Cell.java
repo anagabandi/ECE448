@@ -66,19 +66,22 @@ public class Cell {
 		this.height = height;
 	}
 
-	public Character toChar() {
-		if(this.cellType.equals(CellType.WALL)) return '%';
-		if(this.cellType.equals(CellType.OPEN)) return ' ';
-		if(this.cellType.equals(CellType.GOAL)) return '.';
-		if(this.cellType.equals(CellType.START)) return 'P';
-		if(this.cellType.equals(CellType.VISITED)) return '^';
-		return ' ';
+	public String toChar() {
+		if(this.cellType.equals(CellType.WALL)) return "%";
+		if(this.cellType.equals(CellType.OPEN)) return " ";
+		if(this.cellType.equals(CellType.GOAL)) return ".";
+		if(this.cellType.equals(CellType.START)) return "P";
+		if(this.cellType.equals(CellType.VISITED)) return "^";
+		return " ";
 	}
 	
 	public void markAsVisited() {
 		this.hasVisited = true;
 		//this.cellType = CellType.VISITED;
-
+	}
+	
+	public void markAsUnvisited() {
+		this.hasVisited = false;
 	}
 	
 	public void markAsPath() {
@@ -91,5 +94,9 @@ public class Cell {
 			return true;	
 		}
 		return false;
+	}
+	
+	public void print() {
+		System.out.println(x + ", " + y);
 	}
 }
