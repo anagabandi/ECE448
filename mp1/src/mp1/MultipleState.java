@@ -7,6 +7,7 @@ public class MultipleState {
 	private List<Cell> reachedGoals;
 	private List<Cell> visited;
 	public int pathCost = 0;
+	private double heuristic = 0;
 	
 	public Cell getCell() {
 		return cell;
@@ -39,6 +40,28 @@ public class MultipleState {
 		this.reachedGoals = s;
 		this.visited = v;
 		this.pathCost = pc;
+	}
+	
+	public MultipleState(Cell c, List<Cell> s, List<Cell> v, int pc, double h) {
+		this.cell = c;
+		this.reachedGoals = s;
+		this.visited = v;
+		this.pathCost = pc;
+		this.heuristic = h;
+	}
+	
+	public MultipleState(Cell c, List<Cell> s, int pc, double h) {
+		this.cell = c;
+		this.reachedGoals = s;
+		this.pathCost = pc;
+		this.heuristic = h;
+	}
+	
+	public double getHeuristic() {
+		return heuristic;
+	}
+	public void setHeuristic(double heuristic) {
+		this.heuristic = heuristic;
 	}
 	
 	

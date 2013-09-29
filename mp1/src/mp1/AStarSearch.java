@@ -7,7 +7,7 @@ public class AStarSearch extends Search {
 private int startX, startY, goalX, goalY;
 	
 	private double heuristic(int x, int y) {
-		return Math.pow(Math.abs(goalX - x) + Math.abs(goalY - y), 1) + cells[x][y].height;
+		return Math.pow(Math.pow(goalX - x, 2) + Math.pow(goalY - y,2), .5) + cells[x][y].height;
 	}
 	
 	private void setInititalStates() {

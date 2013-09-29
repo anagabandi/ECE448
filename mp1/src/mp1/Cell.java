@@ -77,7 +77,7 @@ public class Cell {
 	
 	public void markAsVisited() {
 		this.hasVisited = true;
-		//this.cellType = CellType.VISITED;
+		this.cellType = CellType.VISITED;
 	}
 	
 	public void markAsUnvisited() {

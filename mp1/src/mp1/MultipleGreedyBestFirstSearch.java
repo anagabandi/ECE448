@@ -1,11 +1,10 @@
 package mp1;
 
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
-public class MultipleDepthFirstSearch extends Search {
+public class MultipleGreedyBestFirstSearch extends Search {
 	private int startX, startY;
 	private ArrayList<Cell> goals;
 	private List<Cell> shortestOrder;
@@ -223,7 +222,4 @@ public class MultipleDepthFirstSearch extends Search {
 		System.out.println();
 
 	}
-	
-
-
 }

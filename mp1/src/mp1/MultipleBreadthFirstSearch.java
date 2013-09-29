@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Stack;
 
 public class MultipleBreadthFirstSearch extends Search {
 	private int startX, startY;
@@ -42,8 +41,8 @@ public class MultipleBreadthFirstSearch extends Search {
 		MultipleState ms = new MultipleState(cells[x][y], new ArrayList<Cell>(), new ArrayList<Cell>());
 		
 		qu.add(ms);
-		
-		while(!qu.isEmpty()) {
+		boolean foundSolution = false;
+		while(!qu.isEmpty() && !foundSolution) {
 			MultipleState state = qu.remove();
 			
 			
@@ -169,6 +168,7 @@ public class MultipleBreadthFirstSearch extends Search {
 						pathLength = pathCost;
 						shortestOrder = reachedGoals;
 					}
+					foundSolution = true;
 				}
 			//}
 		}
@@ -206,9 +206,9 @@ public class MultipleBreadthFirstSearch extends Search {
 			}
 		}
 		
-		Integer order = 1;
+		Integer order = 0;
 		for(Cell q : shortestOrder) {
-			printCells[q.getX()][q.getY()] = order.toString();
+			printCells[q.getX()][q.getY()] = display[order];
 			order++;
 		}
 		
@@ -219,7 +219,9 @@ public class MultipleBreadthFirstSearch extends Search {
 			}
 		}
 		System.out.println();
+		System.out.println("Shortest Path: " + pathLength);
 		System.out.println("Nodes Expanded: " + nodesExpanded);
+		System.out.println();
 	}
 	
 
