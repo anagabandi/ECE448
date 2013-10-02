@@ -118,9 +118,7 @@ private int startX, startY, goalX, goalY;
 					
 					tmp.setDistance(heuristic(x, y+1, cells[x][y].getDistance()));
 					pq.add(tmp);
-				}
-				
-				
+				}		
 				
 			}
 						

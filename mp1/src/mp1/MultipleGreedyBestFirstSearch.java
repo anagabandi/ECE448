@@ -1,15 +1,16 @@
 package mp1;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 
 public class MultipleGreedyBestFirstSearch extends Search {
 	private int startX, startY;
 	private ArrayList<Cell> goals;
-	private List<Cell> shortestOrder;
-	private int nodesExpanded = 0;
-	
+	private ArrayList<Cell> visited = new ArrayList<Cell>();
+	private ArrayList<Cell> solution = new ArrayList<Cell>();
+	int total=0;
 	
 	private void setInititalStates() {
 		pathLength = Integer.MAX_VALUE;
@@ -29,169 +30,89 @@ public class MultipleGreedyBestFirstSearch extends Search {
 	
 	@Override
 	public void findPath() {
-		System.out.println("Solving Multiple DFS");
+		System.out.println("Solving GreedyBestFirstSearch");
 		setInititalStates();
+		
+		PriorityQueue<AStarState> pq = new PriorityQueue<AStarState>(10, new Comparator<AStarState>() {
+			@Override
+			public int compare(AStarState n1, AStarState n2) {
+				if(n1.getHeuristic() > n2.getHeuristic()) {
+					return +1;
+				}
+				else if (n1.getHeuristic() < n2.getHeuristic()) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}
+		});
 		
 		int x = startX;
 		int y = startY;
-				
-		Stack<MultipleState> st = new Stack<MultipleState>();
-		MultipleState ms = new MultipleState(cells[x][y], new ArrayList<Cell>(), new ArrayList<Cell>());
 		
-		st.add(ms);
-		boolean foundSolution = false;
-		while(!st.empty() && !foundSolution) {
-			MultipleState state = st.pop();
+		AStarState a = new AStarState(cells[x][y], 0);
+		a.setPathLength(0);
+		pq.add(a);
+		
+		while(!goals.isEmpty()) {
+			AStarState state = pq.remove();
+			int currentPathLength = state.getPathLength();
 			
-			
-			Cell c = state.getCell();
-			List<Cell> reachedGoals = new ArrayList<Cell>();
-			
-			for(Cell q : state.getReachedGoals()) {
-				reachedGoals.add(q);
-			}
-			
-			List<Cell> visited = new ArrayList<Cell>();
-			for(Cell q : state.getVisited()) {
-				visited.add(q);
-			}
-			
-			int nextPathCost = state.pathCost + 1;
-			
-			//if(!c.isHasVisited()) { // Only "expands" the node if we haven't been there already
+			if(!visited.contains(state.getCell())) {
 				
-				x = c.getX();
-				y = c.getY();
+				visited.add(state.getCell());
+				x = state.getCell().getX();
+				y = state.getCell().getY();
 				
-				//System.out.print("Popped: ");
-				nodesExpanded++;
+				numberOfNodesExpanded++;
 				
-//				System.out.print(c.getY() + " ");
-//				for(Cell q : reachedGoals) {
-//					System.out.print(q.getY() + " ");
-//				}
-//				System.out.println();
-
-				//cells[x][y].markAsVisited();
-				visited.add(cells[x][y]);
-				
-				for(Cell i : goals) {
-					if(i.getX() == x && i.getY() == y && !reachedGoals.contains(i)) {
-						reachedGoals.add(i);
-						clearVisited();
-						visited = new ArrayList<Cell>();
-						//cells[x][y].markAsVisited();
-						visited.add(cells[x][y]);
+				if(goals.contains(state.getCell())) {
+					
+					visited = new ArrayList<Cell>(); //clear visited
+					visited.add(state.getCell());
+					goals.remove(state.getCell());
+					solution.add(state.getCell());
+					total+=currentPathLength;
+					currentPathLength=0;
+					
+					while(!pq.isEmpty()) {
+						pq.remove();
 					}
+					
+				}
+				if(canTravel(x, y + 1)) { // right
+					Cell tmp = cells[x][y+1];
+					AStarState toAdd = new AStarState(tmp, heuristic(x, y+1, currentPathLength));
+					toAdd.setPathLength(currentPathLength+1);
+					pq.add(toAdd);
 				}
 				
-				
-				// Add nearby to frontier
-				if(reachedGoals.size() != goals.size()) {
-					if(canTravel(x - 1, y) && !visited.contains(cells[x-1][y])) { //up
+				if(canTravel(x - 1, y)) { //up
 						
-						Cell tmp = cells[x-1][y];
-						tmp.height = c.height + 1;
-						if(maxHeight < tmp.height) maxHeight = tmp.height;
-						tmp.parentX = c.getX();
-						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
-						
-						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
-					}
-					
-					if(canTravel(x, y - 1) && !visited.contains(cells[x][y-1])) { // left
-						Cell tmp = cells[x][y-1];
-						tmp.height = c.height + 1;
-						if(maxHeight < tmp.height) maxHeight = tmp.height;
-						tmp.parentX = c.getX();
-						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
-						
-						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
-		
-					}
-					
-					
-					if(canTravel(x + 1, y) && !visited.contains(cells[x + 1][y])) { // down
-						
-						Cell tmp = cells[x+1][y];
-						tmp.height = c.height + 1;
-						if(maxHeight < tmp.height) maxHeight = tmp.height;
-						tmp.parentX = c.getX();
-						tmp.parentY = c.getY();
-
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
-						
-						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
-					}
-					
-					if(canTravel(x, y + 1) && !visited.contains(cells[x][y+1])) { // right
-						
-						Cell tmp = cells[x][y+1];
-						tmp.height = c.height + 1;
-						if(maxHeight < tmp.height) maxHeight = tmp.height;
-						tmp.parentX = c.getX();
-						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
-						
-						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
-					}
-				} else {
-					int pathCost = nextPathCost - 1;
-					if(pathCost < pathLength) {
-						pathLength = pathCost;
-						shortestOrder = reachedGoals;
-					}
-					foundSolution = true;
+					Cell tmp = cells[x-1][y];
+					AStarState toAdd = new AStarState(tmp, heuristic(x-1, y, currentPathLength));
+					toAdd.setPathLength(currentPathLength+1);
+					pq.add(toAdd);
 				}
-			//}
-		}
-		
-		System.out.println("Done.");
-	}
-
-	
-	private void clearVisited() {
-		for(int i = 0; i < rows; i++) {
-			for(int j = 0; j < columns; j++) {
-				cells[i][j].markAsUnvisited();
+				
+				if(canTravel(x, y - 1)) { // left
+					Cell tmp = cells[x][y-1];
+					AStarState toAdd = new AStarState(tmp, heuristic(x, y-1, currentPathLength));
+					toAdd.setPathLength(currentPathLength+1);
+					pq.add(toAdd);
+				}
+				
+				if(canTravel(x + 1, y)) { // down	
+					Cell tmp = cells[x+1][y];
+					AStarState toAdd = new AStarState(tmp, heuristic(x+1, y, currentPathLength));
+					toAdd.setPathLength(currentPathLength+1);
+					pq.add(toAdd);
+				}
 			}
 		}
+		System.out.println("Done");		
 	}
-	
-	// Figures out if the path can be traveled or not.
-	
-	protected boolean canTravel(int x, int y) {
-			if(x < 0 || x > (rows - 1)) return false;
-			if(y < 0 || y > (columns - 1)) return false;
-			if(cells[x][y].isWall()) return false;
-			//if(cells[x][y].isHasVisited()) return false;
-			return true;
-	} 
 	
 	@Override
 	public void printMap() {
@@ -204,9 +125,9 @@ public class MultipleGreedyBestFirstSearch extends Search {
 			}
 		}
 		
-		Integer order = 1;
-		for(Cell q : shortestOrder) {
-			printCells[q.getX()][q.getY()] = order.toString();
+		Integer order = 0;
+		for(Cell q : solution) {
+			printCells[q.getX()][q.getY()] = display[order];
 			order++;
 		}
 		
@@ -216,10 +137,28 @@ public class MultipleGreedyBestFirstSearch extends Search {
 				System.out.print(printCells[i][j]);
 			}
 		}
+		
 		System.out.println();
-		System.out.println("Shortest Path: " + pathLength);
-		System.out.println("Nodes Expanded: " + nodesExpanded);
+		System.out.println("Number of expanded nodes:" + numberOfNodesExpanded);
+		System.out.println("Path Length:"+ total);
 		System.out.println();
+	}
 
+	private double heuristic(int x, int y, int pathLength) {
+		// TODO Auto-generated method stub
+		double dist = Double.MAX_VALUE;
+		
+		for(Cell q : goals) {
+			if(distance(x, y, q.getX(), q.getY()) < dist) {
+				dist = distance(x, y, q.getX(), q.getY());
+			}
+			
+		}
+		return dist;
+	}
+	
+	private double distance(int x1, int y1, int x2, int y2) {
+		//return Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), .5);
+		return (Math.abs(x1 - x2) + Math.abs(y1 - y2));
 	}
 }

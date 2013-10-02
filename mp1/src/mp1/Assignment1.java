@@ -5,12 +5,13 @@ public class Assignment1 {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		
-		test1();
-		test2();
+		//test1();
+		//test2();
 		//testAStar();
 		//testMultipleDFS();
-		//testSuboptimalSearch();
-		
+		testSuboptimalSearch();
+		//test3();
+		//String file = "bigSearch.lay";
 	}
 	
 	private static void test1() throws Exception {
@@ -63,10 +64,19 @@ public class Assignment1 {
 	
 	private static void testSuboptimalSearch() throws Exception {
 		System.out.println("!!!!TESTING Suboptimal Search!!!!");
-		String [] layouts = {"tinySearch.lay", "mediumSearch.lay", "bigSearch.lay", "trickySearch.lay"};
+		String [] layouts = {"bigSearch.lay", "mediumSearch.lay"};
 		Search [] searches = {new SuboptimalSearch()};
 		execute(layouts, searches);
 		
 	}
+	
+	private static void test3() throws Exception {
+		System.out.println("!!!!TESTING Multiple A* Search!!!!");
+		String [] layouts = {"tinySearch.lay", "smallSearch.lay", "trickySearch.lay"};
+		Search [] searches = {new MultipleAStarSearch()};
+		execute(layouts, searches);
+		
+	}
+
 
 }

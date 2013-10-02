@@ -150,7 +150,7 @@ public class SuboptimalSearch extends Search {
 			int tmp_x = x;
 			int tmp_y = y;
 			
-			while(tmp_x != currentStartX || tmp_y != currentStartY) {
+			while(tmp_x != currentStartX || tmp_y != currentStartY) { // backtracks from goal to last starting point to calculate path
 				pathLength++;
 				Cell tmp = cells[tmp_x][tmp_y];
 				tmp_x = tmp.parentX;
