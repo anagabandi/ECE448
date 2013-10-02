@@ -18,6 +18,14 @@ public class Search implements Searcher {
 	@Override
 	public void loadMap(String fileName) throws Exception {
 		// TODO Auto-generated method stub
+		this.rows = 0;
+		this.columns = 0;
+		this.pathLength = 0;
+		this.maxHeight = 0;
+		this.maxFrontierSize = 0;
+		this.numberOfNodesExpanded = 0;
+		
+		System.out.println("Loading " + fileName + "...");
 		String line;
 		InputStream fis = new FileInputStream(fileName);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fis));

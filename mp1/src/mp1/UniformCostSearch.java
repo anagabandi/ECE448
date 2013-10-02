@@ -5,16 +5,17 @@ import java.util.PriorityQueue;
 
 public class UniformCostSearch extends Search {
 private int startX, startY, goalX, goalY;
+private int costFunction;
 	
-	private double cost1(int x, int y, double currentCost) {
-		return Math.pow(1/2, y);
-		//return Math.pow(2, y);
+	private double cost(int x, int y, double currentCost) {
+		if(costFunction == 1) {
+			return Math.pow(1/2, y);
+		} else {
+			return Math.pow(2, y);
+		}
 
 	}
-	
-	private double cost2(int x, int y, double currentCost) {
-		return Math.pow(2, x) + currentCost;
-	}
+
 	
 	private void setInititalStates() {
 		for(int i = 0; i < rows; i++) {
@@ -48,6 +49,7 @@ private int startX, startY, goalX, goalY;
 		});
 		
 		System.out.println("Solving UCS");
+		System.out.println("Using Cost Function #" + costFunction);
 		setInititalStates();
 		boolean foundSolution = false;
 		
@@ -84,7 +86,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					tmp.setCost(cost1(x-1, y, tmp.getCost()));
+					tmp.setCost(cost(x-1, y, tmp.getCost()));
 					pq.add(tmp);
 				}
 				
@@ -95,7 +97,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					tmp.setCost(cost1(x, y-1, tmp.getCost()));
+					tmp.setCost(cost(x, y-1, tmp.getCost()));
 					pq.add(tmp);
 	
 				}
@@ -108,7 +110,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					tmp.setCost(cost1(x+1, y, tmp.getCost()));
+					tmp.setCost(cost(x+1, y, tmp.getCost()));
 					pq.add(tmp);
 				}
 				
@@ -121,7 +123,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentY = c.getY();
 					
 					
-					tmp.setCost(cost1(x, y+1, tmp.getCost()));
+					tmp.setCost(cost(x, y+1, tmp.getCost()));
 					pq.add(tmp);
 				}
 
@@ -141,5 +143,14 @@ private int startX, startY, goalX, goalY;
 						
 					}
 
+	}
+
+	public UniformCostSearch() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public UniformCostSearch(int cf) {
+		this.costFunction = cf;
 	}
 }

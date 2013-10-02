@@ -6,8 +6,9 @@ import java.util.PriorityQueue;
 public class AStarSearch extends Search {
 private int startX, startY, goalX, goalY;
 	
-	private double heuristic(int x, int y) {
-		return Math.pow(Math.pow(goalX - x, 2) + Math.pow(goalY - y,2), .5) + cells[x][y].height;
+	private double heuristic(int x, int y, double past) {
+		//return Math.pow(Math.pow(goalX - x, 2) + Math.pow(goalY - y,2), .5) + cells[x][y].height;
+		return Math.abs(goalX - x) + Math.abs(goalY - y) + past;
 	}
 	
 	private void setInititalStates() {
@@ -48,7 +49,7 @@ private int startX, startY, goalX, goalY;
 		int x = startX;
 		int y = startY;
 		
-		cells[x][y].setDistance(heuristic(x, y));
+		cells[x][y].setDistance(heuristic(x, y, 0));
 		pq.add(cells[x][y]);
 		
 		while(!pq.isEmpty() && !foundSolution) {
@@ -78,7 +79,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					tmp.setDistance(heuristic(x-1, y));
+					tmp.setDistance(heuristic(x-1, y, cells[x][y].getDistance()));
 					pq.add(tmp);
 				}
 				
@@ -89,7 +90,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					tmp.setDistance(heuristic(x, y-1));
+					tmp.setDistance(heuristic(x, y-1, cells[x][y].getDistance()));
 					pq.add(tmp);
 	
 				}
@@ -102,7 +103,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					tmp.setDistance(heuristic(x+1, y));
+					tmp.setDistance(heuristic(x+1, y, cells[x][y].getDistance()));
 					pq.add(tmp);
 				}
 				
@@ -115,7 +116,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentY = c.getY();
 					
 					
-					tmp.setDistance(heuristic(x, y+1));
+					tmp.setDistance(heuristic(x, y+1, cells[x][y].getDistance()));
 					pq.add(tmp);
 				}
 				

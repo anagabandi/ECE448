@@ -10,10 +10,13 @@ public class MultipleDepthFirstSearch extends Search {
 	private ArrayList<Cell> goals;
 	private List<Cell> shortestOrder;
 	private int nodesExpanded = 0;
-	
+	boolean exitingEarly = false;
+
 	
 	private void setInititalStates() {
 		pathLength = Integer.MAX_VALUE;
+		nodesExpanded = 0;
+		
 		goals = new ArrayList<Cell>();
 
 		for(int i = 0; i < rows; i++) {
@@ -40,8 +43,10 @@ public class MultipleDepthFirstSearch extends Search {
 		MultipleState ms = new MultipleState(cells[x][y], new ArrayList<Cell>(), new ArrayList<Cell>());
 		
 		st.add(ms);
+	
 		boolean foundSolution = false;
-		while(!st.empty() && !foundSolution) {
+		exitingEarly = false;
+		while(!st.empty() && !foundSolution && !exitingEarly) {
 			MultipleState state = st.pop();
 			
 			
@@ -64,16 +69,8 @@ public class MultipleDepthFirstSearch extends Search {
 				x = c.getX();
 				y = c.getY();
 				
-				//System.out.print("Popped: ");
 				nodesExpanded++;
 				
-//				System.out.print(c.getY() + " ");
-//				for(Cell q : reachedGoals) {
-//					System.out.print(q.getY() + " ");
-//				}
-//				System.out.println();
-
-				//cells[x][y].markAsVisited();
 				visited.add(cells[x][y]);
 				
 				for(Cell i : goals) {
@@ -96,14 +93,7 @@ public class MultipleDepthFirstSearch extends Search {
 						if(maxHeight < tmp.height) maxHeight = tmp.height;
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
-						
+									
 						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 					}
 					
@@ -113,14 +103,7 @@ public class MultipleDepthFirstSearch extends Search {
 						if(maxHeight < tmp.height) maxHeight = tmp.height;
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
-						
+
 						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 		
 					}
@@ -134,12 +117,6 @@ public class MultipleDepthFirstSearch extends Search {
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
 
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
 						
 						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 					}
@@ -151,14 +128,7 @@ public class MultipleDepthFirstSearch extends Search {
 						if(maxHeight < tmp.height) maxHeight = tmp.height;
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
-						
+												
 						st.push(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 					}
 				} else {
@@ -170,9 +140,15 @@ public class MultipleDepthFirstSearch extends Search {
 					foundSolution = true;
 				}
 			//}
+			if(nodesExpanded > 1000000) {
+				exitingEarly = true;
+			}
 		}
-		
-		System.out.println("Done.");
+		if(exitingEarly) {
+			System.out.println("Too many nodes expanded.");
+		} else {
+			System.out.println("Done.");
+		}
 	}
 
 	
@@ -198,29 +174,35 @@ public class MultipleDepthFirstSearch extends Search {
 	public void printMap() {
 		// TODO Auto-generated method stub
 		// Prints out the map matrix to System.out
-		String [][] printCells = new String[this.rows][this.columns];
-		for(int i = 0; i < this.rows; i++) {
-			for(int j = 0; j < this.columns; j++) {
-				printCells[i][j] = cells[i][j].toChar();
+		if(!exitingEarly) {
+			if(shortestOrder.size() < 36) {
+				String [][] printCells = new String[this.rows][this.columns];
+				for(int i = 0; i < this.rows; i++) {
+					for(int j = 0; j < this.columns; j++) {
+						printCells[i][j] = cells[i][j].toChar();
+					}
+				}
+				
+				Integer order = 0;
+				for(Cell q : shortestOrder) {
+					printCells[q.getX()][q.getY()] = display[order];
+					order++;
+				}
+				
+				for(int i = 0; i < this.rows; i++) {
+					System.out.println();
+					for(int j = 0; j < this.columns; j++) {
+						System.out.print(printCells[i][j]);
+					}
+				}
+			} else {
+				System.out.println("Too many goals to display...");
 			}
-		}
-		
-		Integer order = 1;
-		for(Cell q : shortestOrder) {
-			printCells[q.getX()][q.getY()] = order.toString();
-			order++;
-		}
-		
-		for(int i = 0; i < this.rows; i++) {
 			System.out.println();
-			for(int j = 0; j < this.columns; j++) {
-				System.out.print(printCells[i][j]);
-			}
+			System.out.println("Shortest Path: " + pathLength);
+			System.out.println("Nodes Expanded: " + nodesExpanded);
+			System.out.println();
 		}
-		System.out.println();
-		System.out.println("Shortest Path: " + pathLength);
-		System.out.println("Nodes Expanded: " + nodesExpanded);
-		System.out.println();
 
 	}
 	
