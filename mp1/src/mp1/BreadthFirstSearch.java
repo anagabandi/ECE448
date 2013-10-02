@@ -22,6 +22,9 @@ public class BreadthFirstSearch extends Search {
 	
 	@Override
 	public void findPath() {
+		/* 
+		 * searches exactly like DFS but uses a queue instead
+		 */
 		System.out.println("Solving BFS");
 		setInititalStates();
 

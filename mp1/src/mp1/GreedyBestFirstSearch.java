@@ -7,7 +7,7 @@ public class GreedyBestFirstSearch extends Search {
 	private int startX, startY, goalX, goalY;
 	
 	private int heuristic(int x, int y) {
-		return Math.abs(goalX - x) + Math.abs(goalY - y);
+		return Math.abs(goalX - x) + Math.abs(goalY - y); // just the manhattan distance, no previous path cost
 	}
 	
 	private void setInititalStates() {
@@ -26,7 +26,7 @@ public class GreedyBestFirstSearch extends Search {
 	
 	@Override
 	public void findPath() {
-		PriorityQueue<Cell> pq = new PriorityQueue<Cell>(10, new Comparator<Cell>() {
+		PriorityQueue<Cell> pq = new PriorityQueue<Cell>(10, new Comparator<Cell>() { // uses a priority queue
 			@Override
 			public int compare(Cell n1, Cell n2) {
 				if(n1.getDistance() > n2.getDistance()) {
@@ -48,7 +48,7 @@ public class GreedyBestFirstSearch extends Search {
 		int x = startX;
 		int y = startY;
 		
-		cells[x][y].setDistance(heuristic(x, y));
+		cells[x][y].setDistance(heuristic(x, y)); //calculates the manhattan distance from each point
 		pq.add(cells[x][y]);
 		
 		while(!pq.isEmpty() && !foundSolution) {
@@ -126,7 +126,7 @@ public class GreedyBestFirstSearch extends Search {
 					x = goalX;
 					y = goalY;
 
-					while(x != startX || y != startY) {
+					while(x != startX || y != startY) { // steps back to display the path
 						pathLength++;
 						Cell tmp = cells[x][y];
 						tmp.markAsPath();

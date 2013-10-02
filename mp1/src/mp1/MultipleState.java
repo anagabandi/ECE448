@@ -1,3 +1,8 @@
+/* State for multiple goal searches
+ * includes cell, which cells have been visited, which goals have been reached
+ * and a the current solution to that cell
+ */
+
 package mp1;
 
 import java.util.List;

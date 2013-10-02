@@ -54,18 +54,17 @@ public class MultipleAStarSearch extends Search {
 		
 		int x = startX;
 		int y = startY;
-		//int numberOfNodesExpanded=0;
 		
-		AStarState a = new AStarState(cells[x][y], 0);
 		MultipleState ms = new MultipleState(cells[x][y], new ArrayList<Cell>(), new ArrayList<Cell>(), new ArrayList<Cell>(), 0 ,0);
-		
-		a.setPathLength(0);
+
 		pq.add(ms);
 		boolean foundSolution = false;
 		
-		while(!pq.isEmpty() && !foundSolution) {
+		while(!pq.isEmpty() && !foundSolution) { // end case test
 			MultipleState state = pq.remove();
 			int currentPathLength = state.pathCost;
+			
+			// deep copies for new states
 			List<Cell> visited = new ArrayList<Cell>();
 			for(Cell q : state.getVisited()) {
 				visited.add(q);
@@ -94,7 +93,8 @@ public class MultipleAStarSearch extends Search {
 				for(Cell q : goals) {
 					if(!reachedGoals.contains(q)) goalsLeft.add(q);
 				}
-				if(goalsLeft.contains(state.getCell())) {
+				
+				if(goalsLeft.contains(state.getCell())) { // checks to see if we've reached a goal
 					visited = new ArrayList<Cell>(); //clear visited
 					visited.add(state.getCell());
 					reachedGoals.add(state.getCell());
@@ -102,6 +102,8 @@ public class MultipleAStarSearch extends Search {
 					solution.add(state.getCell());
 														
 				}
+				
+				// Adding nodes to search tree
 				
 				if(canTravel(x, y + 1)) { // right
 					Cell tmp = cells[x][y+1];
@@ -131,7 +133,7 @@ public class MultipleAStarSearch extends Search {
 					pq.add(toAdd);
 				}
 				
-				if(reachedGoals.size() == goals.size()) {
+				if(reachedGoals.size() == goals.size()) { // determines if all the nodes have been hit
 					foundSolution = true;
 					endSolution = solution;
 					total = state.pathCost + 1;
@@ -144,9 +146,7 @@ public class MultipleAStarSearch extends Search {
 	
 	@Override
 	public void printMap() {
-		// TODO Auto-generated method stub
 		// Prints out the map matrix to System.out
-		System.out.println("End" + endSolution.size());
 		if(endSolution.size() < 36) {
 			String [][] printCells = new String[this.rows][this.columns];
 			for(int i = 0; i < this.rows; i++) {
@@ -157,7 +157,6 @@ public class MultipleAStarSearch extends Search {
 			
 			Integer order = 0;
 			for(Cell q : endSolution) {
-				System.out.println("("+q.getX() + ", " + q.getY() + ")");
 				printCells[q.getX()][q.getY()] = display[order];
 				order++;
 			}
@@ -177,7 +176,6 @@ public class MultipleAStarSearch extends Search {
 	}
 
 	private double heuristic(int x, int y, int pathLength, List<Cell> goalsFound) {
-		// TODO Auto-generated method stub
 		double dist = Double.MAX_VALUE;
 		List<Cell> goalsLeft = new ArrayList<Cell>();
 		for(Cell q : goals) {
@@ -186,17 +184,14 @@ public class MultipleAStarSearch extends Search {
 		
 		for(Cell q : goalsLeft) {
 			if(distance(x, y, q.getX(), q.getY()) < dist) {
-				dist = distance(x, y, q.getX(), q.getY());
+				dist = distance(x, y, q.getX(), q.getY()); //gets closest distance to nearest node
 			}
 			
 		}
-		int div = goalsFound.size();
-		if(div == 0) div++;
-		return (dist+pathLength+1) / goalsFound.size();
+		return (dist+pathLength+1) / goalsFound.size(); // weights based on how many nodes have been found
 	}
 	
 	private double distance(int x1, int y1, int x2, int y2) {
-		//return Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), .5);
-		return (Math.abs(x1 - x2) + Math.abs(y1 - y2));
+		return (Math.abs(x1 - x2) + Math.abs(y1 - y2)); // calcuates manhattan distance
 	}
 }

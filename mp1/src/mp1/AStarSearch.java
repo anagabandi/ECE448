@@ -7,8 +7,7 @@ public class AStarSearch extends Search {
 private int startX, startY, goalX, goalY;
 	
 	private double heuristic(int x, int y, double past) {
-		//return Math.pow(Math.pow(goalX - x, 2) + Math.pow(goalY - y,2), .5) + cells[x][y].height;
-		return Math.abs(goalX - x) + Math.abs(goalY - y) + past;
+		return Math.abs(goalX - x) + Math.abs(goalY - y) + past; // manhattan distance plus the previous cost
 	}
 	
 	private void setInititalStates() {
@@ -27,7 +26,7 @@ private int startX, startY, goalX, goalY;
 	
 	@Override
 	public void findPath() {
-		PriorityQueue<Cell> pq = new PriorityQueue<Cell>(10, new Comparator<Cell>() {
+		PriorityQueue<Cell> pq = new PriorityQueue<Cell>(10, new Comparator<Cell>() { // same as greedy best first, uses pq
 			@Override
 			public int compare(Cell n1, Cell n2) {
 				if(n1.getDistance() > n2.getDistance()) {
@@ -79,7 +78,7 @@ private int startX, startY, goalX, goalY;
 					tmp.parentX = c.getX();
 					tmp.parentY = c.getY();
 					
-					tmp.setDistance(heuristic(x-1, y, cells[x][y].getDistance()));
+					tmp.setDistance(heuristic(x-1, y, cells[x][y].getDistance())); // adds to pq based on heuristic
 					pq.add(tmp);
 				}
 				
@@ -127,7 +126,7 @@ private int startX, startY, goalX, goalY;
 					x = goalX;
 					y = goalY;
 
-					while(x != startX || y != startY) {
+					while(x != startX || y != startY) { // steps back through code and prints solution
 						pathLength++;
 						Cell tmp = cells[x][y];
 						tmp.markAsPath();

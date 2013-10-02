@@ -73,12 +73,11 @@ public class MultipleDepthFirstSearch extends Search {
 				
 				visited.add(cells[x][y]);
 				
-				for(Cell i : goals) {
+				for(Cell i : goals) { // checks to see if we are currently at a goal. if we are then
 					if(i.getX() == x && i.getY() == y && !reachedGoals.contains(i)) {
-						reachedGoals.add(i);
-						clearVisited();
-						visited = new ArrayList<Cell>();
-						//cells[x][y].markAsVisited();
+						reachedGoals.add(i); // add it to the reached goals
+						clearVisited(); // clear the cells (since everything is fair game now)
+						visited = new ArrayList<Cell>(); // add the current cell to visited
 						visited.add(cells[x][y]);
 					}
 				}
@@ -152,7 +151,7 @@ public class MultipleDepthFirstSearch extends Search {
 	}
 
 	
-	private void clearVisited() {
+	private void clearVisited() { // clears visited for when you hit a goal
 		for(int i = 0; i < rows; i++) {
 			for(int j = 0; j < columns; j++) {
 				cells[i][j].markAsUnvisited();
@@ -166,13 +165,11 @@ public class MultipleDepthFirstSearch extends Search {
 			if(x < 0 || x > (rows - 1)) return false;
 			if(y < 0 || y > (columns - 1)) return false;
 			if(cells[x][y].isWall()) return false;
-			//if(cells[x][y].isHasVisited()) return false;
 			return true;
 	} 
 	
 	@Override
 	public void printMap() {
-		// TODO Auto-generated method stub
 		// Prints out the map matrix to System.out
 		if(!exitingEarly) {
 			if(shortestOrder.size() < 36) {

@@ -9,8 +9,8 @@ public class Assignment1 {
 		//test2();
 		//testAStar();
 		//testMultipleDFS();
-		testSuboptimalSearch();
-		//test3();
+		//testSuboptimalSearch();
+		test3();
 		//String file = "bigSearch.lay";
 	}
 	
@@ -71,9 +71,9 @@ public class Assignment1 {
 	}
 	
 	private static void test3() throws Exception {
-		System.out.println("!!!!TESTING Multiple A* Search!!!!");
+		System.out.println("!!!!TESTING MP1.3!!!!");
 		String [] layouts = {"tinySearch.lay", "smallSearch.lay", "trickySearch.lay"};
-		Search [] searches = {new MultipleAStarSearch()};
+		Search [] searches = {new MultipleBreadthFirstSearch(), new MultipleDepthFirstSearch(), new MultipleGreedyBestFirstSearch(), new MultipleAStarSearch()};
 		execute(layouts, searches);
 		
 	}

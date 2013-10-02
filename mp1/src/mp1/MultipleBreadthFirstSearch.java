@@ -10,6 +10,7 @@ public class MultipleBreadthFirstSearch extends Search {
 	private ArrayList<Cell> goals;
 	private List<Cell> shortestOrder;
 	private int nodesExpanded = 0;
+	boolean exitingEarly;
 	
 	
 	private void setInititalStates() {
@@ -42,7 +43,8 @@ public class MultipleBreadthFirstSearch extends Search {
 		
 		qu.add(ms);
 		boolean foundSolution = false;
-		while(!qu.isEmpty() && !foundSolution) {
+		exitingEarly = false;
+		while(!qu.isEmpty() && !foundSolution && !exitingEarly) {
 			MultipleState state = qu.remove();
 			
 			
@@ -60,21 +62,14 @@ public class MultipleBreadthFirstSearch extends Search {
 			
 			int nextPathCost = state.pathCost + 1;
 			
-			//if(!c.isHasVisited()) { // Only "expands" the node if we haven't been there already
 				
 				x = c.getX();
 				y = c.getY();
 				
-				//System.out.print("Popped: ");
 				nodesExpanded++;
 				
-//				System.out.print(c.getY() + " ");
-//				for(Cell q : reachedGoals) {
-//					System.out.print(q.getY() + " ");
-//				}
-//				System.out.println();
 
-				//cells[x][y].markAsVisited();
+
 				visited.add(cells[x][y]);
 				
 				for(Cell i : goals) {
@@ -82,7 +77,6 @@ public class MultipleBreadthFirstSearch extends Search {
 						reachedGoals.add(i);
 						clearVisited();
 						visited = new ArrayList<Cell>();
-						//cells[x][y].markAsVisited();
 						visited.add(cells[x][y]);
 					}
 				}
@@ -98,12 +92,6 @@ public class MultipleBreadthFirstSearch extends Search {
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
 						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
 						
 						qu.add(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 					}
@@ -114,13 +102,7 @@ public class MultipleBreadthFirstSearch extends Search {
 						if(maxHeight < tmp.height) maxHeight = tmp.height;
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
+
 						
 						qu.add(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 		
@@ -135,12 +117,6 @@ public class MultipleBreadthFirstSearch extends Search {
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
 
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
 						
 						qu.add(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 					}
@@ -152,13 +128,7 @@ public class MultipleBreadthFirstSearch extends Search {
 						if(maxHeight < tmp.height) maxHeight = tmp.height;
 						tmp.parentX = c.getX();
 						tmp.parentY = c.getY();
-						
-//						System.out.print("Pushed: ");
-//						System.out.print(tmp.getY() + " ");
-//						for(Cell q : reachedGoals) {
-//							System.out.print(q.getY() + " ");
-//						}
-//						System.out.println();
+
 						
 						qu.add(new MultipleState(tmp, reachedGoals, visited, nextPathCost));
 					}
@@ -170,7 +140,15 @@ public class MultipleBreadthFirstSearch extends Search {
 					}
 					foundSolution = true;
 				}
-			//}
+				
+				if(nodesExpanded > 1000000) { // exits early if too many nodes expanded
+					exitingEarly = true;
+				}
+			}
+			if(exitingEarly) {
+				System.out.println("Too many nodes expanded.");
+			} else {
+				System.out.println("Done.");
 		}
 		
 		System.out.println("Done.");
@@ -199,6 +177,7 @@ public class MultipleBreadthFirstSearch extends Search {
 	public void printMap() {
 		// TODO Auto-generated method stub
 		// Prints out the map matrix to System.out
+		if(!exitingEarly) {
 		String [][] printCells = new String[this.rows][this.columns];
 		for(int i = 0; i < this.rows; i++) {
 			for(int j = 0; j < this.columns; j++) {
@@ -222,6 +201,7 @@ public class MultipleBreadthFirstSearch extends Search {
 		System.out.println("Shortest Path: " + pathLength);
 		System.out.println("Nodes Expanded: " + nodesExpanded);
 		System.out.println();
+		}
 	}
 	
 

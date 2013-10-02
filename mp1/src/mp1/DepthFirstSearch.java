@@ -5,7 +5,7 @@ import java.util.Stack;
 public class DepthFirstSearch extends Search {
 	private int startX, startY, goalX, goalY;
 	
-	private void setInititalStates() {
+	private void setInititalStates() { // does some parsing work to get the map in a way we can deal wit hit.
 		for(int i = 0; i < rows; i++) {
 			for(int j = 0; j < columns; j++) {
 				if(cells[i][j].cellType.equals(CellType.START)) {
@@ -49,7 +49,6 @@ public class DepthFirstSearch extends Search {
 				}
 				
 				// Add nearby to frontier
-				
 				if(canTravel(x - 1, y)) { //up
 					
 					Cell tmp = cells[x-1][y];
@@ -105,7 +104,7 @@ public class DepthFirstSearch extends Search {
 		x = goalX;
 		y = goalY;
 
-		while(x != startX || y != startY) {
+		while(x != startX || y != startY) { // steps backward through parents to print solution
 			pathLength++;
 			Cell tmp = cells[x][y];
 			tmp.markAsPath();
