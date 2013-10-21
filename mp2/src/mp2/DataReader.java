@@ -89,12 +89,13 @@ public class DataReader {
 			}
 		}
 		
-		List<Integer>[] ret = new List[count];
-		for(int i = 0; i < ret.length; i++) {
+		@SuppressWarnings("unchecked")
+		List<Integer>[] ret = new List[count + 1];
+		for(int i = 1; i < ret.length; i++) {
 			ret[i] = new ArrayList<Integer>();
 		}
 		
-		int idx = 0;
+		int idx = 1;
 		for(String l : file) {
 			if(l.matches("^[0-9]+: [0-9].*")) {
 				String [] arr = l.split("[^\\d]+");
@@ -103,11 +104,6 @@ public class DataReader {
 				}
 				idx++;
 			}
-		}
-		
-		for(int i = 0; i < ret.length; i++) {
-			System.out.print(i + 1 + ":");
-			System.out.println(ret[i].toString());
 		}
 		return ret;
 	}
@@ -120,14 +116,14 @@ public class DataReader {
 			}
 		}
 		
-		int [][] ret = new int[count][count];
+		int [][] ret = new int[count + 1][count + 1];
 		
-		int idx = 0;
+		int idx = 1;
 		for(String l : file) {
 			if(l.matches("^[0-9]+: {3,4}[0-9].*")) {
 				String [] arr = l.split("[^\\d]+");
 				for(int j = 1; j < arr.length; j++) {
-					ret[idx][j-1] = Integer.parseInt(arr[j]);
+					ret[idx][j] = Integer.parseInt(arr[j]);
 				}
 				idx++;
 			}

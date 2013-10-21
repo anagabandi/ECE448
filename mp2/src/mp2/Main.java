@@ -1,17 +1,28 @@
 package mp2;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+
 public class Main {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		DataReader dr = new DataReader("problem1.txt");
-		System.out.println("Number of meetings: " + dr.getNumberOfMeetings());
-		System.out.println("Number of employees: " + dr.getNumberOfEmployees());
-		System.out.println("Number of timeslots: " + dr.getNumberOfTimeSlots());
+		MeetingScheduler ms = new MeetingScheduler("problem0.txt");
+		ms.search();
 		
-		dr.getEmployeeMeetings();
 		
-		dr.getTimeMatrix();
+		
+		
+
+		
+		
+		
+		
+		
 	}
+	
 
 }
